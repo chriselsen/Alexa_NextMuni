@@ -1,8 +1,21 @@
 {
   "intents": [
     {
-      "intent": "GetBusTimesIntent",
-      "slots": []
+      "intent": "GetMuniTimesIntent",
+      "slots": [
+        {
+          "name": "Type",
+          "type": "TRANSIT_TYPE"
+        },
+        {
+          "name": "Line",
+          "type": "TRANSIT_LINE"
+        },
+        {
+          "name": "Direction",
+          "type": "TRANSIT_DIRECTION"
+        }
+      ]
     },
     {
       "intent": "HelpIntent",
