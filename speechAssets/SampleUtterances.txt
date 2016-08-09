@@ -1,8 +1,58 @@
-GetBusTimesIntent when the next bus is coming
-GetBusTimesIntent when is the next bus coming
-GetBusTimesIntent when the next buses are coming
-GetBusTimesIntent when are the next buses coming
-GetBusTimesIntent next bus
+GetMuniTimesIntent when the next {Type} is coming
+GetMuniTimesIntent when the next {Line} {Type} is coming
+GetMuniTimesIntent when the next {Line} is coming
+GetMuniTimesIntent when the next {Direction} {Line} {Type} is coming
+GetMuniTimesIntent when the next {Direction} {Line} is coming
+GetMuniTimesIntent when the next {Line} {Direction} {Type} is coming
+GetMuniTimesIntent when the next {Line} {Direction} is coming
+
+GetMuniTimesIntent when is the next {Type} is coming
+GetMuniTimesIntent when is the next {Line} {Type} is coming
+GetMuniTimesIntent when is the next {Line} is coming
+GetMuniTimesIntent when is the next {Direction} {Line} {Type} is coming
+GetMuniTimesIntent when is the next {Direction} {Line} is coming
+GetMuniTimesIntent when is the next {Line} {Direction} {Type} is coming
+GetMuniTimesIntent when is the next {Line} {Direction} is coming
+
+GetMuniTimesIntent when the next {Type} are coming
+GetMuniTimesIntent when the next {Line} {Type} are coming
+GetMuniTimesIntent when the next {Line} are coming
+GetMuniTimesIntent when the next {Direction} {Line} {Type} are coming
+GetMuniTimesIntent when the next {Direction} {Line} are coming
+GetMuniTimesIntent when the next {Line} {Direction} {Type} are coming
+GetMuniTimesIntent when the next {Line} {Direction} are coming
+
+GetMuniTimesIntent when are the next {Type} coming
+GetMuniTimesIntent when are the next {Line} {Type} coming
+GetMuniTimesIntent when are the next {Line} coming
+GetMuniTimesIntent when are the next {Direction} {Line} {Type} coming
+GetMuniTimesIntent when are the next {Direction} {Line} coming
+GetMuniTimesIntent when are the next {Line} {Direction} {Type} coming
+GetMuniTimesIntent when are the next {Line} {Direction} coming
+
+GetMuniTimesIntent for the next {Type}
+GetMuniTimesIntent for the next {Line} {Type}
+GetMuniTimesIntent for the next {Line}
+GetMuniTimesIntent for the next {Direction} {Line} {Type}
+GetMuniTimesIntent for the next {Direction} {Line}
+GetMuniTimesIntent for the next {Line} {Direction} {Type}
+GetMuniTimesIntent for the next {Line} {Direction}
+
+GetMuniTimesIntent for next {Type}
+GetMuniTimesIntent for next {Line} {Type}
+GetMuniTimesIntent for next {Line}
+GetMuniTimesIntent for next {Direction} {Line} {Type}
+GetMuniTimesIntent for next {Direction} {Line}
+GetMuniTimesIntent for next {Line} {Direction} {Type}
+GetMuniTimesIntent for next {Line} {Direction}
+
+GetMuniTimesIntent next {Type}
+GetMuniTimesIntent next {Line} {Type}
+GetMuniTimesIntent next {Line}
+GetMuniTimesIntent next {Direction} {Line} {Type}
+GetMuniTimesIntent next {Direction} {Line}
+GetMuniTimesIntent next {Line} {Direction} {Type}
+GetMuniTimesIntent next {Line} {Direction}
 
 HelpIntent help
 HelpIntent help me
