@@ -1,4 +1,4 @@
-var APP_ID = undefined; //replace with "amzn1.echo-sdk-ams.app.[your-unique-value-here]";
+var APP_ID = undefined;
 
 var http = require('http');
 var AlexaSkill = require('./AlexaSkill');
@@ -17,7 +17,6 @@ MuniTimes.prototype.eventHandlers.onSessionStarted = function (sessionStartedReq
 
 MuniTimes.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
     console.log("MuniTimes onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    handleMuniRequest(response);
 };
 
 MuniTimes.prototype.intentHandlers = {
@@ -25,7 +24,13 @@ MuniTimes.prototype.intentHandlers = {
 		if (intent.slots.Type.value) { var intentType = intent.slots.Type.value } else { var intentType = '' } 
 		if (intent.slots.Line.value) { var intentLine = intent.slots.Line.value } else { var intentLine = '' }
 		if (intent.slots.Direction.value) { var intentDirection = intent.slots.Direction.value } else { var intentDirection = '' }
-		handleMuniRequest(intentType,intentLine,intentDirection,response); 
+		handleMuniRequest(intentType,intentLine,intentDirection,response);
+    },
+	
+	GetMuniMessageIntent: function (intent, session, response) {
+		if (intent.slots.Type.value) { var intentType = intent.slots.Type.value } else { var intentType = '' } 
+		if (intent.slots.Line.value) { var intentLine = intent.slots.Line.value } else { var intentLine = '' }
+		handleMessageRequest(intentType,intentLine,response);	
     },
 	
     HelpIntent: function (intent, session, response) {
@@ -34,6 +39,157 @@ MuniTimes.prototype.intentHandlers = {
 };
 
 function handleMuniRequest(type,line,direction,response) {
+	var myMuniStop = findMuniStop(type,line,direction);
+	var stopId = myMuniStop[0];
+	var typeName = myMuniStop[1];
+		
+	makeNextMuniRequest(stopId, function nextMuniRequestCallback(err, nextMuniResponse, nextMessageResponse) {
+        var speechOutput;
+
+        if (err) {
+            speechOutput = "Sorry, the Next Muni service is experiencing a problem. Please try again later";
+        } else {
+			if (nextMuniResponse==""){
+				speechOutput = "There is currently no service for the " + typeName;
+			} else {
+				speechOutput = "The next " + typeName + " are " + nextMuniResponse;
+				if(nextMessageResponse){
+					speechOutput += " Attention: " + nextMessageResponse;
+				}
+			}
+        }
+
+		response.tell(speechOutput)
+    });
+}
+
+function handleMessageRequest(type,line,response) {
+	var myMuniStop = findMuniStop(type,line,'');
+	var stopId = myMuniStop[0];
+	var typeName = myMuniStop[1];
+		
+	makeNextMuniRequest(stopId, function nextMuniRequestCallback(err, nextMuniResponse, nextMessageResponse) {
+        var speechOutput;
+
+        if (err) {
+            speechOutput = "Sorry, the Next Muni service is experiencing a problem. Please try again later";
+        } else {
+			if(nextMessageResponse){
+				speechOutput = "Service Message: " + nextMessageResponse;
+			} else {
+				speechOutput = "There is currently no service message for the " + typeName;
+			}
+        }
+
+		response.tell(speechOutput)
+    });
+}
+
+function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
+    var agency = "sf-muni";
+	var endpoint = 'http://webservices.nextbus.com/service/publicXMLFeed';
+	var queryString = '?command=predictionsForMultiStops&a='+ agency + stopId;
+
+    http.get(endpoint + queryString, function (res) {
+        var nextMuniResponseString = '';
+
+        res.on('data', function (data) {
+            nextMuniResponseString += data;
+        });
+
+        res.on('end', function () {
+            var data = []
+			var message = []
+            var parseString = require('xml2js').parseString;
+            var nextMuniResponseObject = parseString(nextMuniResponseString, function (err, result) {
+                for(var i = 0; i < result.body.predictions.length; i++) {
+                    var currPredictions = result.body.predictions[i];
+                    if (currPredictions.direction != undefined) {
+                        for (var j = 0; j < currPredictions.direction.length; j++) {
+                            for (var k = 0; k < currPredictions.direction[j].prediction.length; k++) {
+                                var dict = {};
+                                dict["route"] = currPredictions.$.routeTag;
+                                dict["minutes"] = Number(currPredictions.direction[j].prediction[k].$.minutes);
+                                data[data.length] = dict;
+                            }
+                        }
+                    }
+					if (currPredictions.message != undefined){
+                        for (var j = 0; j < currPredictions.message.length; j++) {
+                                var dict = {};
+                                dict["message"] = currPredictions.message[j].$.text;
+                                dict["priority"] = currPredictions.message[j].$.priority;
+                                message[message.length] = dict;
+                        }
+
+                    }	
+                }
+
+                // Sort by arrival times
+                data.sort(function(a, b) {
+                    if (a["minutes"] < b["minutes"]) return -1;
+                    if (a["minutes"] > b["minutes"]) return 1;
+                    return 0;
+                });
+            });
+
+            if (nextMuniResponseObject.error) {
+                console.log("NextMuni error: " + nextMuniResponseObject.error.message);
+                nextMuniRequestCallback(new Error(nextMuniResponseObject.error.message));
+            } else {
+                nextMuniRequestCallback(null, convertDataToString(data), convertMessageToString(message));
+            }
+        });
+    }).on('error', function (e) {
+        console.log("Communications error: " + e.message);
+        nextMuniRequestCallback(new Error(e.message));
+    });
+}
+
+function convertDataToString(data) {
+    var string = ""
+    var n = Math.min(data.length, 3)
+    for (var i = 0; i < n; i++) {
+        string += data[i]["route"] + " in " + data[i]["minutes"] + (data[i]["minutes"] == 1 ? " minute" : " minutes")
+        if (i < (n - 1)) {
+            string += ", "
+            if (i == (n - 2)) {
+                string += "and "
+            }
+        } else {
+            string += "."
+        }
+    }
+    return string
+}
+
+function convertMessageToString(data) {
+    var string = ""
+    var n = Math.min(data.length, 3)
+    for (var i = 0; i < n; i++) {
+		if (data[i]["priority"] == "High") {
+			string += data[i]["message"]
+			if (i < (n - 1)) {
+				string += ", "
+			} else {
+				string += "."
+			}
+		}
+    }
+    string = string.replace(/(?:\r\n|\r|\n)/g, ' ');
+	string = string.replace("/", ' and ');
+    string = string.replace("Sta.", 'Station');
+    string = string.replace("IB", 'Inbound');
+    string = string.replace("OB", 'Outbound');
+    return string
+}
+
+/**
+ * Uses NextMuni API, currently agency and stop ID are hardcoded.
+ * Get agency name from: http://webservices.nextbus.com/service/publicXMLFeed?command=agencyList
+ * For SF Muni, get stop tag from: http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni&r=KT
+ */
+function findMuniStop(type,line,direction) {
 	switch(line){
 		case "N":
 			var stopId = "&stops=N|5240";
@@ -81,97 +237,8 @@ function handleMuniRequest(type,line,direction,response) {
 					var typeName = "metros";						
 			}	
 	}
-
-
-	makeNextMuniRequest("sf-muni", stopId, function nextMuniRequestCallback(err, nextMuniResponse) {
-        var speechOutput;
-
-        if (err) {
-            speechOutput = "Sorry, the Next Muni service is experiencing a problem. Please try again later";
-        } else {
-			if (nextMuniResponse==""){
-				speechOutput = "There is currently no service for the " + typeName;
-			} else {
-				speechOutput = "The next " + typeName + " are " + nextMuniResponse;
-			}
-        }
-
-        //response.tellWithCard(speechOutput, "Muni", speechOutput)
-		response.tell(speechOutput)
-    });
-}
-
-/**
- * Uses NextMuni API, currently agency and stop ID are hardcoded.
- * Get agency name from: http://webservices.nextbus.com/service/publicXMLFeed?command=agencyList
- * For SF Muni, get stop ID from: http://www.nextbus.com/wirelessConfig/stopNumbers.jsp?a=sf-muni
- */
-function makeNextMuniRequest(agency, stopId, nextMuniRequestCallback) {
-
-    var endpoint = 'http://webservices.nextbus.com/service/publicXMLFeed';
-	var queryString = '?command=predictionsForMultiStops&a='+ agency + stopId;
-
-    http.get(endpoint + queryString, function (res) {
-        var nextMuniResponseString = '';
-
-        res.on('data', function (data) {
-            nextMuniResponseString += data;
-        });
-
-        res.on('end', function () {
-            var data = []
-            var parseString = require('xml2js').parseString;
-            var nextMuniResponseObject = parseString(nextMuniResponseString, function (err, result) {
-                for(var i = 0; i < result.body.predictions.length; i++) {
-                    var currPredictions = result.body.predictions[i];
-                    if (currPredictions.direction != undefined) {
-                        for (var j = 0; j < currPredictions.direction.length; j++) {
-                            for (var k = 0; k < currPredictions.direction[j].prediction.length; k++) {
-                                var dict = {};
-                                dict["route"] = currPredictions.$.routeTag;
-                                dict["minutes"] = Number(currPredictions.direction[j].prediction[k].$.minutes);
-                                data[data.length] = dict;
-                            }
-                        }
-                    }
-                }
-
-                // Sort by arrival times
-                data.sort(function(a, b) {
-                    if (a["minutes"] < b["minutes"]) return -1;
-                    if (a["minutes"] > b["minutes"]) return 1;
-                    return 0;
-                });
-            });
-
-            if (nextMuniResponseObject.error) {
-                console.log("NextMuni error: " + nextMuniResponseObject.error.message);
-                nextMuniRequestCallback(new Error(nextMuniResponseObject.error.message));
-            } else {
-                nextMuniRequestCallback(null, convertDataToString(data));
-            }
-        });
-    }).on('error', function (e) {
-        console.log("Communications error: " + e.message);
-        nextMuniRequestCallback(new Error(e.message));
-    });
-}
-
-function convertDataToString(data) {
-    var string = ""
-    var n = Math.min(data.length, 3)
-    for (var i = 0; i < n; i++) {
-        string += data[i]["route"] + " in " + data[i]["minutes"] + (data[i]["minutes"] == 1 ? " minute" : " minutes")
-        if (i < (n - 1)) {
-            string += ", "
-            if (i == (n - 2)) {
-                string += "and "
-            }
-        } else {
-            string += "."
-        }
-    }
-    return string
+	
+	return [stopId, typeName];
 }
 
 exports.handler = function (event, context) {
