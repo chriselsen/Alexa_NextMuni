@@ -29,5 +29,5 @@ then update the lambda source zip file with this change and upload to lambda aga
 9. In order to test it, try to say some of the Sample Utterances from the Examples section below. 
 
 ## Examples
-"Alexa, ask Muni when the next metros are coming."
-"Alexa, ask Muni if there is a problem with the 45 bus."
+* "Alexa, ask Muni when the next metros are coming."
+* "Alexa, ask Muni if there is a problem with the 45 bus."
