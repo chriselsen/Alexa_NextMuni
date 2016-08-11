@@ -77,7 +77,7 @@ function handleMessageRequest(type,line,response) {
 			if(nextMessageResponse){
 				speechOutput = "Service Message: " + nextMessageResponse;
 			} else {
-				speechOutput = "There is currently no service message for the " + typeName;
+				speechOutput = "There is currently no service message for the " + typeName + ".";
 			}
         }
 
