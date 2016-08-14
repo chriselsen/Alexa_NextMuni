@@ -6,7 +6,6 @@ GetMuniTimesIntent when the {Direction} {Line} is coming
 GetMuniTimesIntent when the {Line} {Direction} {Type} is coming
 GetMuniTimesIntent when the {Line} {Direction} is coming
 
-
 GetMuniTimesIntent when the next {Type} is coming
 GetMuniTimesIntent when the next {Line} {Type} is coming
 GetMuniTimesIntent when the next {Line} is coming
@@ -22,7 +21,6 @@ GetMuniTimesIntent when is the {Direction} {Line} {Type} is coming
 GetMuniTimesIntent when is the {Direction} {Line} is coming
 GetMuniTimesIntent when is the {Line} {Direction} {Type} is coming
 GetMuniTimesIntent when is the {Line} {Direction} is coming
-
 
 GetMuniTimesIntent when is the next {Type} is coming
 GetMuniTimesIntent when is the next {Line} {Type} is coming
