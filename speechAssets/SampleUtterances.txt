@@ -1,3 +1,12 @@
+GetMuniTimesIntent when the {Type} is coming
+GetMuniTimesIntent when the {Line} {Type} is coming
+GetMuniTimesIntent when the {Line} is coming
+GetMuniTimesIntent when the {Direction} {Line} {Type} is coming
+GetMuniTimesIntent when the {Direction} {Line} is coming
+GetMuniTimesIntent when the {Line} {Direction} {Type} is coming
+GetMuniTimesIntent when the {Line} {Direction} is coming
+
+
 GetMuniTimesIntent when the next {Type} is coming
 GetMuniTimesIntent when the next {Line} {Type} is coming
 GetMuniTimesIntent when the next {Line} is coming
@@ -5,6 +14,15 @@ GetMuniTimesIntent when the next {Direction} {Line} {Type} is coming
 GetMuniTimesIntent when the next {Direction} {Line} is coming
 GetMuniTimesIntent when the next {Line} {Direction} {Type} is coming
 GetMuniTimesIntent when the next {Line} {Direction} is coming
+
+GetMuniTimesIntent when is the {Type} is coming
+GetMuniTimesIntent when is the {Line} {Type} is coming
+GetMuniTimesIntent when is the {Line} is coming
+GetMuniTimesIntent when is the {Direction} {Line} {Type} is coming
+GetMuniTimesIntent when is the {Direction} {Line} is coming
+GetMuniTimesIntent when is the {Line} {Direction} {Type} is coming
+GetMuniTimesIntent when is the {Line} {Direction} is coming
+
 
 GetMuniTimesIntent when is the next {Type} is coming
 GetMuniTimesIntent when is the next {Line} {Type} is coming
@@ -53,6 +71,15 @@ GetMuniTimesIntent next {Direction} {Line} {Type}
 GetMuniTimesIntent next {Direction} {Line}
 GetMuniTimesIntent next {Line} {Direction} {Type}
 GetMuniTimesIntent next {Line} {Direction}
+
+GetMuniMessageIntent if there is a problem with the {Line} {Type}
+GetMuniMessageIntent if there is a problem with the {Line}
+GetMuniMessageIntent if there is a message for the {Line} {Type}
+GetMuniMessageIntent if there is a message for the {Line}
+GetMuniMessageIntent if there is a problem on the {Line} {Type}
+GetMuniMessageIntent if there is a problem on the {Line}
+GetMuniMessageIntent if there is a problem
+GetMuniMessageIntent if there is a service message
 
 HelpIntent help
 HelpIntent help me

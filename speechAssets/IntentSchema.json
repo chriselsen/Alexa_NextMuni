@@ -18,6 +18,19 @@
       ]
     },
     {
+      "intent": "GetMuniMessageIntent",
+      "slots": [
+        {
+          "name": "Type",
+          "type": "TRANSIT_TYPE"
+        },
+        {
+          "name": "Line",
+          "type": "TRANSIT_LINE"
+        }
+      ]
+    },
+    {
       "intent": "HelpIntent",
       "slots": []
     }
