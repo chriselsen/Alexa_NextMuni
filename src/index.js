@@ -1,4 +1,4 @@
-var APP_ID = undefined;
+var APP_ID = "amzn1.ask.skill.394d8512-f1d7-4f33-a6d4-a42b492e0a6c";
 
 var http = require('http');
 var AlexaSkill = require('./AlexaSkill');
@@ -178,7 +178,11 @@ function convertMessageToString(data) {
     }
     string = string.replace(/(?:\r\n|\r|\n)/g, ' ');
 	string = string.replace("/", ' and ');
+	string = string.replace("&", ' and ');
+	string = string.replace("@", ' at ');
     string = string.replace("Sta.", 'Station');
+	string = string.replace("svc", 'service');
+	string = string.replace("btwn", 'between');
     string = string.replace("IB", 'Inbound');
     string = string.replace("OB", 'Outbound');
     return string
@@ -245,3 +249,4 @@ exports.handler = function (event, context) {
     var busTimes = new MuniTimes();
     busTimes.execute(event, context);
 };
+
