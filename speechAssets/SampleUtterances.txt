@@ -79,6 +79,15 @@ GetMuniMessageIntent if there is a problem on the {Line}
 GetMuniMessageIntent if there is a problem
 GetMuniMessageIntent if there is a service message
 
+GetMuniMessageIntent is a problem with the {Line} {Type}
+GetMuniMessageIntent is a problem with the {Line}
+GetMuniMessageIntent is a message for the {Line} {Type}
+GetMuniMessageIntent is a message for the {Line}
+GetMuniMessageIntent is a problem on the {Line} {Type}
+GetMuniMessageIntent is a problem on the {Line}
+GetMuniMessageIntent is a problem
+GetMuniMessageIntent is a service message
+
 HelpIntent help
 HelpIntent help me
 HelpIntent what can I ask you
