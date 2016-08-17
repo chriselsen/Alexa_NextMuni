@@ -99,12 +99,12 @@ function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
 
         res.on('end', function () {
             var data = []
-			var message = []
+			var messagedata = []
             var parseString = require('xml2js').parseString;
             var nextMuniResponseObject = parseString(nextMuniResponseString, function (err, result) {
-                for(var i = 0; i < result.body.predictions.length; i++) {
+				for(var i = 0; i < result.body.predictions.length; i++) {
                     var currPredictions = result.body.predictions[i];
-                    if (currPredictions.direction != undefined) {
+				    if (currPredictions.direction != undefined) {
                         for (var j = 0; j < currPredictions.direction.length; j++) {
                             for (var k = 0; k < currPredictions.direction[j].prediction.length; k++) {
                                 var dict = {};
@@ -114,17 +114,26 @@ function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
                             }
                         }
                     }
-					if (currPredictions.message != undefined){
+					if (currPredictions.message != undefined){	
                         for (var j = 0; j < currPredictions.message.length; j++) {
                                 var dict = {};
                                 dict["message"] = currPredictions.message[j].$.text;
                                 dict["priority"] = currPredictions.message[j].$.priority;
-                                message[message.length] = dict;
+                                messagedata.push(dict);
                         }
-
                     }	
                 }
+				
+				// Deduplicate messages
+				var arr = {};
+				for (var i = 0; i < messagedata.length; i++)
+					arr[messagedata[i]['message']] = messagedata[i];
 
+				messages = new Array();
+				for ( var key in arr )
+					messages.push(arr[key]);
+															
+								
                 // Sort by arrival times
                 data.sort(function(a, b) {
                     if (a["minutes"] < b["minutes"]) return -1;
@@ -137,7 +146,7 @@ function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
                 console.log("NextMuni error: " + nextMuniResponseObject.error.message);
                 nextMuniRequestCallback(new Error(nextMuniResponseObject.error.message));
             } else {
-                nextMuniRequestCallback(null, convertDataToString(data), convertMessageToString(message));
+                nextMuniRequestCallback(null, convertDataToString(data), convertMessageToString(messages));
             }
         });
     }).on('error', function (e) {
