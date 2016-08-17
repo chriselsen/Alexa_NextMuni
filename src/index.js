@@ -86,73 +86,73 @@ function handleMessageRequest(type,line,response) {
 }
 
 function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
-    var agency = "sf-muni";
+	var agency = "sf-muni";
 	var endpoint = 'http://webservices.nextbus.com/service/publicXMLFeed';
 	var queryString = '?command=predictionsForMultiStops&a='+ agency + stopId;
 
-    http.get(endpoint + queryString, function (res) {
-        var nextMuniResponseString = '';
+	http.get(endpoint + queryString, function (res) {
+		var nextMuniResponseString = '';
 
-        res.on('data', function (data) {
-            nextMuniResponseString += data;
-        });
+        	res.on('data', function (data) {
+			nextMuniResponseString += data;
+        	});
 
-        res.on('end', function () {
-            var data = []
+		res.on('end', function () {
+        		var data = []
 			var messagedata = []
-            var parseString = require('xml2js').parseString;
-            var nextMuniResponseObject = parseString(nextMuniResponseString, function (err, result) {
+			var parseString = require('xml2js').parseString;
+			var nextMuniResponseObject = parseString(nextMuniResponseString, function (err, result) {
 				for(var i = 0; i < result.body.predictions.length; i++) {
-                    var currPredictions = result.body.predictions[i];
-				    if (currPredictions.direction != undefined) {
-                        for (var j = 0; j < currPredictions.direction.length; j++) {
-                            for (var k = 0; k < currPredictions.direction[j].prediction.length; k++) {
-                                var dict = {};
-                                dict["route"] = currPredictions.$.routeTag;
-                                dict["minutes"] = Number(currPredictions.direction[j].prediction[k].$.minutes);
-                                data[data.length] = dict;
-                            }
-                        }
-                    }
+	                    		var currPredictions = result.body.predictions[i];
+					if (currPredictions.direction != undefined) {
+						for (var j = 0; j < currPredictions.direction.length; j++) {
+							for (var k = 0; k < currPredictions.direction[j].prediction.length; k++) {
+								var dict = {};
+								dict["route"] = currPredictions.$.routeTag;
+								dict["minutes"] = Number(currPredictions.direction[j].prediction[k].$.minutes);
+								data[data.length] = dict;
+							}
+						}
+					}
 					if (currPredictions.message != undefined){	
-                        for (var j = 0; j < currPredictions.message.length; j++) {
-                                var dict = {};
-                                dict["message"] = currPredictions.message[j].$.text;
-                                dict["priority"] = currPredictions.message[j].$.priority;
-                                messagedata.push(dict);
-                        }
-                    }	
-                }
+						for (var j = 0; j < currPredictions.message.length; j++) {
+							var dict = {};
+							dict["message"] = currPredictions.message[j].$.text;
+							dict["priority"] = currPredictions.message[j].$.priority;
+							messagedata.push(dict);
+						}
+					}	
+				}
 				
 				// Deduplicate messages
 				var arr = {};
 				for (var i = 0; i < messagedata.length; i++)
 					arr[messagedata[i]['message']] = messagedata[i];
-
+	
 				messages = new Array();
 				for ( var key in arr )
 					messages.push(arr[key]);
-															
-								
-                // Sort by arrival times
-                data.sort(function(a, b) {
-                    if (a["minutes"] < b["minutes"]) return -1;
-                    if (a["minutes"] > b["minutes"]) return 1;
-                    return 0;
-                });
-            });
+																
+									
+				// Sort by arrival times
+				data.sort(function(a, b) {
+					if (a["minutes"] < b["minutes"]) return -1;
+					if (a["minutes"] > b["minutes"]) return 1;
+					return 0;
+				});
+			});
 
-            if (nextMuniResponseObject.error) {
-                console.log("NextMuni error: " + nextMuniResponseObject.error.message);
-                nextMuniRequestCallback(new Error(nextMuniResponseObject.error.message));
-            } else {
-                nextMuniRequestCallback(null, convertDataToString(data), convertMessageToString(messages));
-            }
-        });
-    }).on('error', function (e) {
-        console.log("Communications error: " + e.message);
-        nextMuniRequestCallback(new Error(e.message));
-    });
+			if (nextMuniResponseObject.error) {
+				console.log("NextMuni error: " + nextMuniResponseObject.error.message);
+				nextMuniRequestCallback(new Error(nextMuniResponseObject.error.message));
+			} else {
+				nextMuniRequestCallback(null, convertDataToString(data), convertMessageToString(messages));
+			}
+        	});
+	}).on('error', function (e) {
+        	console.log("Communications error: " + e.message);
+		nextMuniRequestCallback(new Error(e.message));
+	});
 }
 
 function convertDataToString(data) {
