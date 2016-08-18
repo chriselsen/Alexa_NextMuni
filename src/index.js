@@ -123,17 +123,16 @@ function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
 						}
 					}	
 				}
-				
+
 				// Deduplicate messages
 				var arr = {};
 				for (var i = 0; i < messagedata.length; i++)
 					arr[messagedata[i]['message']] = messagedata[i];
-	
+
 				messages = new Array();
 				for ( var key in arr )
 					messages.push(arr[key]);
-																
-									
+
 				// Sort by arrival times
 				data.sort(function(a, b) {
 					if (a["minutes"] < b["minutes"]) return -1;
