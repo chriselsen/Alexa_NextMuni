@@ -116,7 +116,7 @@ function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
 					}
 					if (currPredictions.message != undefined){	
 						for (var j = 0; j < currPredictions.message.length; j++) {
-							var dict = {};
+							var dict = {}; 
 							dict["message"] = currPredictions.message[j].$.text;
 							dict["priority"] = currPredictions.message[j].$.priority;
 							messagedata.push(dict);
@@ -173,11 +173,10 @@ function convertDataToString(data) {
 
 function convertMessageToString(data) {
     var string = ""
-    var n = Math.min(data.length, 3)
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < data.length; i++) {
 		if (data[i]["priority"] == "High") {
 			string += data[i]["message"]
-			if (i < (n - 1)) {
+			if (i < (data.length - 1)) {
 				string += ", "
 			} else {
 				string += "."
