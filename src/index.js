@@ -220,28 +220,28 @@ function findMuniStop(type,line,direction) {
 			break;
 		case "30":
 			var stopId = "&stops=30|7235";
-			var typeName = "outbound 30 busses";
+			var typeName = "outbound 30 buses";
 			break;
 		case "45":
 			var stopId = "&stops=45|7235";
-			var typeName = "outbound 45 busses";	
+			var typeName = "outbound 45 buses";	
 			break;
 		case "10":
 			var stopId = "&stops=10|6695";
-			var typeName = "inbound 10 busses";	
+			var typeName = "inbound 10 buses";	
 			break;
 		case "82":
 		case "82X":
 		case "82 express":
 			var stopId = "&stops=82X|3164";
-			var typeName = "inbound 82X busses";	
+			var typeName = "inbound 82X buses";	
 			break;	
 		default:
 			switch(type){
 				case "bus":
-				case "busses":
+				case "buses":
 					var stopId = "&stops=30|7235&stops=45|7235";
-					var typeName = "busses";
+					var typeName = "buses";
 				break;	
 				default:
 					var stopId = "&stops=N|5240&stops=KT|7166";
