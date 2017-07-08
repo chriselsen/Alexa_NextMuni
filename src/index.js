@@ -168,6 +168,8 @@ function convertDataToString(data) {
 			} else {
 				string += "."
 			}
+		} else {
+                	string += "."
 		}
 	}
 	return string
