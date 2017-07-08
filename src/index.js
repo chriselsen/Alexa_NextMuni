@@ -155,24 +155,24 @@ function makeNextMuniRequest(stopId, nextMuniRequestCallback) {
 }
 
 function convertDataToString(data) {
-	var string = ""
-	var n = Math.min(data.length, 3)
-	for (var i = 0; i < n; i++) {
-		if (data[i]["minutes"] > 2) { // Only output rides at least 2 minutes away.
-			string += data[i]["route"] + " in " + data[i]["minutes"] + (data[i]["minutes"] == 1 ? " minute" : " minutes")
-			if (i < (n - 1)) {
-				string += ", "
-				if (i == (n - 2)) {
-					string += "and "
-				}
-			} else {
-				string += "."
-			}
-		} else {
-                	string += "."
-		}
-	}
-	return string
+var string = ""
+    var n = Math.min(data.length, 3)
+    for (var i = 0; i < n; i++) {
+        if (data[i]["minutes"] > 2) {
+            string += data[i]["route"] + " in " + data[i]["minutes"] + (data[i]["minutes"] == 1 ? " minute" : " minutes")
+            if (i < (n - 1)) {
+                string += ", "
+                if (i == (n - 2)) {
+                    string += "and "
+                }
+            } else {
+                string += "."
+            }
+        } else {
+            n++;
+        }
+    }
+    return string
 }
 
 function convertMessageToString(data) {
