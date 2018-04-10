@@ -224,21 +224,21 @@ function findMuniStop(type,line,direction) {
 			break;
 		case "30":
 			var stopId = "&stops=30|7235";
-			var typeName = "outbound 30 buses";
+			var typeName = "outbound 30 busses to Jefferson Loop";
 			break;
 		case "45":
 			var stopId = "&stops=45|7235";
-			var typeName = "outbound 45 buses";	
+			var typeName = "outbound 45 busses to Lyon and Greenwich";	
 			break;
 		case "10":
 			var stopId = "&stops=10|6695";
-			var typeName = "inbound 10 buses";	
+			var typeName = "inbound 10 busses to Fillmore and Jackson";	
 			break;
 		case "82":
 		case "82X":
 		case "82 express":
 			var stopId = "&stops=82X|3164";
-			var typeName = "inbound 82X buses";	
+			var typeName = "inbound 82X buses to Sansome and Filbert";	
 			break;	
 		case "83":
 		case "83X":
