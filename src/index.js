@@ -240,6 +240,12 @@ function findMuniStop(type,line,direction) {
 			var stopId = "&stops=82X|3164";
 			var typeName = "inbound 82X buses";	
 			break;	
+		case "83":
+		case "83X":
+		case "83 express":
+			var stopId = "&stops=83X|3163";
+			var typeName = "Inbound 83X bus to Civic Center";	
+			break;		
 		default:
 			switch(type){
 				case "bus":
