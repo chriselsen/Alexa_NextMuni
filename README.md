@@ -1,4 +1,4 @@
-# BusTimes [![Build Status](https://travis-ci.org/chriselsen/Alexa_NextMuni.svg?branch=master)](https://travis-ci.org/chriselsen/Alexa_NextMuni)
+# BusTimes
 A simple AWS Lambda (http://aws.amazon.com/lambda) function that looks up bus times based on a hardcoded NextBus stop ID.
 
 ## Setup
